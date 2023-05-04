@@ -1,0 +1,44 @@
+{
+    is_msvc = {
+        __extra_csnippets = {
+            is_msvc = {
+                tryrun = true
+            }
+        },
+        csnippets = {
+            is_msvc = "return (_MSC_VER)?0:-1;"
+        },
+        __sourceinfo_csnippets = {
+            ["return (_MSC_VER)?0:-1;"] = {
+                file = [[.\xmake.lua]],
+                line = 9
+            },
+            is_msvc = {
+                file = [[.\xmake.lua]],
+                line = 9
+            }
+        },
+        __scriptdir = [[E:\Dev\AwakeDXRenderEngine]]
+    },
+    is_clang = {
+        __extra_csnippets = {
+            is_clang = {
+                tryrun = true
+            }
+        },
+        csnippets = {
+            is_clang = "return (__clang__)?0:-1;"
+        },
+        __sourceinfo_csnippets = {
+            ["return (__clang__)?0:-1;"] = {
+                file = [[.\xmake.lua]],
+                line = 4
+            },
+            is_clang = {
+                file = [[.\xmake.lua]],
+                line = 4
+            }
+        },
+        __scriptdir = [[E:\Dev\AwakeDXRenderEngine]]
+    }
+}
