@@ -45,6 +45,23 @@
         [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\default_target.lua]],
         "xmake run AwakeRenderEngine",
         [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\default_target.lua]],
+        "xmake run AwakeRenderEngine",
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\explorer.lua]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\config.lua]],
+        "xmake f -p windows -a x64 -m debug",
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\targetpath.lua default]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\target_rundir.lua default]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\target_runenvs.lua default]],
+        "xmake -w",
+        [[xmake lua E:\Dev_tools\xmake\actions\build\statistics.lua]],
+        [[xmake lua E:\Dev_tools\xmake\actions\build\cleaner.lua]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\targetpath.lua default]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\target_rundir.lua default]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\target_runenvs.lua default]],
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\default_target.lua]],
+        "xmake run AwakeRenderEngine",
+        "xmake -w",
+        [[xmake l c:\Users\m_Vertex\.vscode\extensions\tboox.xmake-vscode-2.0.9\assets\default_target.lua]],
         "xmake run AwakeRenderEngine"
     }
 }
