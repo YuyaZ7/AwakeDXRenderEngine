@@ -44,7 +44,7 @@ void D3D12BetterSimpleBox::LoadPipeline() {
 	swapChainDesc.BufferCount = FrameCount;
 	swapChainDesc.Width = m_width;
 	swapChainDesc.Height = m_height;
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc.Format = rtvFormat;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.SampleDesc.Count = 1;
@@ -197,7 +197,7 @@ void D3D12BetterSimpleBox::LoadAssets() {
 	ThrowIfFailed(cmdAllocator->Reset());
 	ThrowIfFailed(commandList->Reset(cmdAllocator.Get(), nullptr));
 	// Present the frame.
-	// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+	//  Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 	{
 		// Start the Dear ImGui frame
 		ImGui_ImplDX12_NewFrame();
@@ -223,7 +223,8 @@ void D3D12BetterSimpleBox::LoadAssets() {
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
-	commandList->SetDescriptorHeaps(1, &m_imgui_srvHeap);
+	ID3D12DescriptorHeap* ppHeaps[] = {m_imgui_srvHeap.Get()};
+	commandList->SetDescriptorHeaps(1, ppHeaps);
 
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
