@@ -2,6 +2,7 @@
 #include <Resource/Buffer.h>
 
 class DefaultBuffer final : public Buffer {
+	//如何管理显存？
 private:
 	uint64 byteSize;
 	D3D12_RESOURCE_STATES initState;
@@ -16,7 +17,7 @@ public:
 		uint64 byteSize,
 		D3D12_RESOURCE_STATES initState = D3D12_RESOURCE_STATE_COMMON);
 	~DefaultBuffer();
-	D3D12_RESOURCE_STATES GetInitState() const override {	
+	D3D12_RESOURCE_STATES GetInitState() const override {
 		return initState;
 	}
 

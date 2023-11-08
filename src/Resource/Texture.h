@@ -1,5 +1,6 @@
 #pragma once
 #include <Resource/Resource.h>
+
 enum class TextureDimension : vbyte {
 	None,
 	Tex1D,
@@ -15,9 +16,9 @@ public:
 		RenderTarget = 0x1,
 		DepthStencil = 0x2,
 		UnorderedAccess = 0x4,
-		GenericColor = (0x4 | 0x1) // Both render target and unordered access
+		GenericColor = (0x4 | 0x1)// Both render target and unordered access
 	};
-	static constexpr float CLEAR_COLOR[4] = {0,0,0,0};
+	static constexpr float CLEAR_COLOR[4] = {0, 0, 0, 0};
 	static constexpr float CLEAR_DEPTH = 1;
 	static constexpr uint8_t CLEAR_STENCIL = 0;
 
@@ -26,6 +27,8 @@ private:
 	D3D12_RESOURCE_STATES initState;
 	TextureDimension dimension;
 	TextureUsage usage;
+	D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc = nullptr;
+	D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc = nullptr;
 
 public:
 	Texture(
@@ -49,7 +52,7 @@ public:
 	D3D12_RESOURCE_STATES GetInitState() const {
 		return initState;
 	}
-	D3D12_SHADER_RESOURCE_VIEW_DESC GetColorSrvDesc(uint mipOffset) const;
-	D3D12_UNORDERED_ACCESS_VIEW_DESC GetColorUavDesc(uint targetMipLevel) const;
+	D3D12_SHADER_RESOURCE_VIEW_DESC* GetColorSrvDesc(uint mipOffset) const;
+	D3D12_UNORDERED_ACCESS_VIEW_DESC* GetColorUavDesc(uint targetMipLevel) const;
 	void DelayDispose(FrameResource* frameRes) const override;
 };

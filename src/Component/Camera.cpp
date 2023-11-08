@@ -2,7 +2,7 @@
 using namespace DirectX;
 using namespace Math;
 Camera::Camera() {
-	SetLens(0.25f * MathHelper::Pi, 1.0f, 1000.0f);
+	SetLens(0.25f * MathHelper::Pi, 0.1f, 100000.0f);
 }
 Camera::~Camera() {
 }
@@ -23,6 +23,7 @@ void Camera::LookAt(const Math::Vector3& pos, const Math::Vector3& target, const
 	Right = normalize(cross(worldUp, Forward));
 	Up = cross(Forward, Right);
 	Position = pos;
+	mViewDirty = true;
 }
 void Camera::UpdateProjectionMatrix() {
 	if (isOrtho) {
@@ -37,5 +38,40 @@ void Camera::UpdateProjectionMatrix() {
 	}
 }
 void Camera::UpdateViewMatrix() {
-	View = GetInverseTransformMatrix(Right, Up, Forward, Position);
+	if (mViewDirty) {
+		View = GetInverseTransformMatrix(Right, Up, Forward, Position);
+		mViewDirty = false;
+	}
+}
+void Camera::Strafe(float d) {
+
+	Position += Right * d;
+	mViewDirty = true;
+}
+
+void Camera::Walk(float d) {
+	// mPosition += d*mLook
+
+	Position += Forward * d;
+	mViewDirty = true;
+}
+
+void Camera::Pitch(float angle) {
+	// Rotate up and look vector about the right vector.
+
+	XMMATRIX R = XMMatrixRotationAxis(Right.m_vec, angle);
+	Up.m_vec = XMVector3TransformNormal(Up, R);
+	Forward.m_vec = XMVector3TransformNormal(Forward, R);
+	mViewDirty = true;
+}
+
+void Camera::RotateY(float angle) {
+	// Rotate the basis vectors about the world y-axis.
+
+	XMMATRIX R = XMMatrixRotationY(angle);
+	Right.m_vec = XMVector3TransformNormal(Right, R);
+	Up.m_vec = XMVector3TransformNormal(Up, R);
+	Forward.m_vec = XMVector3TransformNormal(Forward, R);
+
+	mViewDirty = true;
 }

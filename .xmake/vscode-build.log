@@ -1,0 +1,5 @@
+[ 11%]: cache compiling.debug src\Component\RenderItem.cpp
+[ 16%]: cache compiling.debug src\D3D12BetterSimpleBox.cpp
+[ 33%]: cache compiling.debug src\main.cpp
+[ 95%]: linking.debug AwakeRenderEngine.exe
+[100%]: build ok, spent 4.672s

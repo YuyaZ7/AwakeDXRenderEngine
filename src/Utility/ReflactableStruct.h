@@ -16,7 +16,7 @@ struct VarTypeData {
 	vbyte dimension;
 	uint semanticIndex;
 	std::string semantic;
-	size_t GetSize() const;
+	size_t GetSize() const;//demansion*4
 };
 class VarTypeBase;
 class Struct {
@@ -25,7 +25,7 @@ class Struct {
 
 public:
 	std::span<VarTypeData const> Variables() const { return variables; }
-	size_t structSize = 0;
+	size_t structSize = 0;//bytes of the struct
 
 	Struct();
 	Struct(Struct const&) = delete;

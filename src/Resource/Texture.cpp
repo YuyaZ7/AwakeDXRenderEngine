@@ -68,6 +68,7 @@ Texture::Texture(
 		memcpy(clearValue.Color, CLEAR_COLOR, 16);
 	}
 	clearValue.Format = format;
+
 	ThrowIfFailed(device->DxDevice()->CreateCommittedResource(
 		propPtr,
 		D3D12_HEAP_FLAG_NONE,
@@ -75,79 +76,79 @@ Texture::Texture(
 		initState,
 		&clearValue,
 		IID_PPV_ARGS(&resource)));
+	srvDesc = new D3D12_SHADER_RESOURCE_VIEW_DESC;
+	uavDesc = new D3D12_UNORDERED_ACCESS_VIEW_DESC;
 }
 
-D3D12_SHADER_RESOURCE_VIEW_DESC Texture::GetColorSrvDesc(uint mipOffset) const {
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+D3D12_SHADER_RESOURCE_VIEW_DESC* Texture::GetColorSrvDesc(uint mipOffset) const {
+	srvDesc->Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	auto format = resource->GetDesc();
-	srvDesc.Format = format.Format;
+	srvDesc->Format = format.Format;
 	switch (dimension) {
 		case TextureDimension::Cubemap:
-			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-			srvDesc.TextureCube.MostDetailedMip = mipOffset;
-			srvDesc.TextureCube.MipLevels = format.MipLevels;
-			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+			srvDesc->ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+			srvDesc->TextureCube.MostDetailedMip = mipOffset;
+			srvDesc->TextureCube.MipLevels = format.MipLevels;
+			srvDesc->TextureCube.ResourceMinLODClamp = 0.0f;
 			break;
 		case TextureDimension::Tex2D:
-			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-			srvDesc.Texture2D.MostDetailedMip = mipOffset;
-			srvDesc.Texture2D.MipLevels = format.MipLevels;
-			srvDesc.Texture2D.PlaneSlice = 0;
-			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+			srvDesc->ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+			srvDesc->Texture2D.MostDetailedMip = mipOffset;
+			srvDesc->Texture2D.MipLevels = format.MipLevels;
+			srvDesc->Texture2D.PlaneSlice = 0;
+			srvDesc->Texture2D.ResourceMinLODClamp = 0.0f;
 			break;
 		case TextureDimension::Tex1D:
-			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
-			srvDesc.Texture1D.MipLevels = format.MipLevels;
-			srvDesc.Texture1D.MostDetailedMip = mipOffset;
-			srvDesc.Texture1D.ResourceMinLODClamp = 0.0f;
+			srvDesc->ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
+			srvDesc->Texture1D.MipLevels = format.MipLevels;
+			srvDesc->Texture1D.MostDetailedMip = mipOffset;
+			srvDesc->Texture1D.ResourceMinLODClamp = 0.0f;
 			break;
 		case TextureDimension::Tex2DArray:
-			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
-			srvDesc.Texture2DArray.MostDetailedMip = mipOffset;
-			srvDesc.Texture2DArray.MipLevels = format.MipLevels;
-			srvDesc.Texture2DArray.PlaneSlice = 0;
-			srvDesc.Texture2DArray.ResourceMinLODClamp = 0.0f;
-			srvDesc.Texture2DArray.ArraySize = format.DepthOrArraySize;
-			srvDesc.Texture2DArray.FirstArraySlice = 0;
+			srvDesc->ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+			srvDesc->Texture2DArray.MostDetailedMip = mipOffset;
+			srvDesc->Texture2DArray.MipLevels = format.MipLevels;
+			srvDesc->Texture2DArray.PlaneSlice = 0;
+			srvDesc->Texture2DArray.ResourceMinLODClamp = 0.0f;
+			srvDesc->Texture2DArray.ArraySize = format.DepthOrArraySize;
+			srvDesc->Texture2DArray.FirstArraySlice = 0;
 			break;
 		case TextureDimension::Tex3D:
-			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
-			srvDesc.Texture3D.MipLevels = format.MipLevels;
-			srvDesc.Texture3D.MostDetailedMip = mipOffset;
-			srvDesc.Texture3D.ResourceMinLODClamp = 0.0f;
+			srvDesc->ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
+			srvDesc->Texture3D.MipLevels = format.MipLevels;
+			srvDesc->Texture3D.MostDetailedMip = mipOffset;
+			srvDesc->Texture3D.ResourceMinLODClamp = 0.0f;
 			break;
 	}
 	return srvDesc;
 }
-D3D12_UNORDERED_ACCESS_VIEW_DESC Texture::GetColorUavDesc(uint targetMipLevel) const {
-	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+D3D12_UNORDERED_ACCESS_VIEW_DESC* Texture::GetColorUavDesc(uint targetMipLevel) const {
 	auto desc = resource->GetDesc();
 	uint maxLevel = desc.MipLevels - 1;
 	targetMipLevel = std::min(targetMipLevel, maxLevel);
-	uavDesc.Format = desc.Format;
+	uavDesc->Format = desc.Format;
 	switch (dimension) {
 		case TextureDimension::Tex2D:
-			uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-			uavDesc.Texture2D.MipSlice = targetMipLevel;
-			uavDesc.Texture2D.PlaneSlice = 0;
+			uavDesc->ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+			uavDesc->Texture2D.MipSlice = targetMipLevel;
+			uavDesc->Texture2D.PlaneSlice = 0;
 			break;
 		case TextureDimension::Tex1D:
-			uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE1D;
-			uavDesc.Texture1D.MipSlice = targetMipLevel;
+			uavDesc->ViewDimension = D3D12_UAV_DIMENSION_TEXTURE1D;
+			uavDesc->Texture1D.MipSlice = targetMipLevel;
 			break;
 		case TextureDimension::Tex3D:
-			uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE3D;
-			uavDesc.Texture3D.FirstWSlice = 0;
-			uavDesc.Texture3D.MipSlice = targetMipLevel;
-			uavDesc.Texture3D.WSize = desc.DepthOrArraySize >> targetMipLevel;
+			uavDesc->ViewDimension = D3D12_UAV_DIMENSION_TEXTURE3D;
+			uavDesc->Texture3D.FirstWSlice = 0;
+			uavDesc->Texture3D.MipSlice = targetMipLevel;
+			uavDesc->Texture3D.WSize = desc.DepthOrArraySize >> targetMipLevel;
 			break;
 		default:
-			uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
-			uavDesc.Texture2DArray.ArraySize = desc.DepthOrArraySize;
-			uavDesc.Texture2DArray.FirstArraySlice = 0;
-			uavDesc.Texture2DArray.MipSlice = targetMipLevel;
-			uavDesc.Texture2DArray.PlaneSlice = 0;
+			uavDesc->ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
+			uavDesc->Texture2DArray.ArraySize = desc.DepthOrArraySize;
+			uavDesc->Texture2DArray.FirstArraySlice = 0;
+			uavDesc->Texture2DArray.MipSlice = targetMipLevel;
+			uavDesc->Texture2DArray.PlaneSlice = 0;
 			break;
 	}
 	return uavDesc;
@@ -163,6 +164,8 @@ Texture::Texture(
 	ThrowIfFailed(swapchain->GetBuffer(frame, IID_PPV_ARGS(&resource)));
 }
 Texture::~Texture() {
+	delete srvDesc;
+	delete uavDesc;
 }
 void Texture::DelayDispose(FrameResource* frameRes) const {
 	frameRes->AddDelayDisposeResource(resource);

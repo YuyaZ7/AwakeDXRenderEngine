@@ -171,6 +171,7 @@ void FrameResource::DrawMesh(
 	cmdList->IASetVertexBuffers(0, vertexBufferView.size(), vertexBufferView.data());
 	D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->GetIndexBufferView();
 	cmdList->IASetIndexBuffer(&indexBufferView);
+
 	struct PropertyBinder {
 		ID3D12GraphicsCommandList* cmdList;
 		Shader const* shader;
@@ -206,4 +207,10 @@ void FrameResource::DrawMesh(
 		0,
 		0,
 		0);
+	if (mesh->tmpIndexBuffer.GetResource() != nullptr) {
+		AddDelayDisposeResource(mesh->tmpIndexBuffer.GetResource());
+		for (auto& i : mesh->tmpVertexBuffers) {
+			AddDelayDisposeResource(i.GetResource());
+		}
+	}
 }

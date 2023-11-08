@@ -1,19 +1,22 @@
 #include <Resource/Mesh.h>
 Mesh::Mesh(
 	Device* device,
-	std::span<rtti::Struct const*> vbStructs,
+	std::vector<rtti::Struct const*> vbStruct,
 	uint vertexCount,
 	uint indexCount)
 	: Resource(device),
+	  vertexStructs(vbStruct),
 	  vertexCount(vertexCount),
-	  vertexStructs(vbStructs),
 	  indexCount(indexCount),
-	  indexBuffer(device, sizeof(uint) * indexCount) {
+	  indexBuffer(device, sizeof(uint) * indexCount),
+	  tmpIndexBuffer(device, sizeof(uint) * indexCount) {
 	vertexBuffers.reserve(vertexStructs.size());
+	tmpVertexBuffers.reserve(vertexStructs.size());
 	uint slotCount = 0;
-	for (auto&& i : vertexStructs) {
-		vertexBuffers.emplace_back(device, i->structSize * vertexCount);
-		i->GetMeshLayout(slotCount, layout);
+	for (uint i = 0; i < vertexStructs.size(); i++) {
+		tmpVertexBuffers.emplace_back(device, vertexStructs[i]->structSize * vertexCount);
+		vertexBuffers.emplace_back(device, vertexStructs[i]->structSize * vertexCount);
+		vertexStructs[i]->GetMeshLayout(slotCount, layout);
 		++slotCount;
 	}
 }

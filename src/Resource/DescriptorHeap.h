@@ -5,7 +5,6 @@
 #include <Resource/Resource.h>
 #include <mutex>
 
-
 class DescriptorHeap final : public Resource {
 private:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> pDH;
@@ -21,6 +20,10 @@ public:
 	uint64 Length() const { return numDescriptors; }
 	ID3D12DescriptorHeap* GetHeap() const { return pDH.Get(); }
 	D3D12_GPU_DESCRIPTOR_HANDLE hGPU(uint64 index) const {
+		if (Desc.Flags != D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE) {
+			printf("Not shader visible!/n");
+			exit(3);
+		}
 		if (index >= Desc.NumDescriptors) index = Desc.NumDescriptors - 1;
 		D3D12_GPU_DESCRIPTOR_HANDLE h = {hGPUHeapStart.ptr + index * HandleIncrementSize};
 		return h;

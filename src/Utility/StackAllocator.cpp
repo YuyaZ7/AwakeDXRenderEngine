@@ -10,6 +10,7 @@ StackAllocator::StackAllocator(
 StackAllocator::Chunk StackAllocator::Allocate(uint64 targetSize) {
 	Buffer* bf = nullptr;
 	uint64 minSize = std::numeric_limits<uint64>::max();
+	//Iterate allocated buffers till the last buffer that has left space
 	for (auto&& i : allocatedBuffers) {
 		if (i.leftSize >= targetSize && i.leftSize < minSize) {
 			minSize = i.leftSize;

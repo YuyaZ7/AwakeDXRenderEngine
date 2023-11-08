@@ -38,7 +38,6 @@ class FrameResource {
 	std::vector<D3D12_VERTEX_BUFFER_VIEW> vertexBufferView;
 	BufferView GetTempBuffer(size_t size, size_t align, StackAllocator& alloc);
 
-
 public:
 	CommandListHandle Command();
 	FrameResource(Device* device);

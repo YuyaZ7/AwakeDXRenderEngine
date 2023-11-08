@@ -23,6 +23,9 @@ public:
 	virtual void OnUpdate() = 0;
 	virtual void OnRender() = 0;
 	virtual void OnDestroy() = 0;
+	virtual void OnMouseDown(WPARAM, int32 /*x*/, int32 /*y*/){};
+	virtual void OnMouseUp(WPARAM, int32 /*x*/, int32 /*y*/){};
+	virtual void OnMouseMove(WPARAM, int32 /*x*/, int32 /*y*/){};
 
 	// Samples override the event handlers to handle specific messages.
 	virtual void OnKeyDown(UINT8 /*key*/) {}

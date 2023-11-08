@@ -14,6 +14,8 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_dx12.h>
 #include <imgui/imgui_impl_win32.h>
+#define GET_X_LPARAM(lp) ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
 HWND Win32Application::m_hwnd = nullptr;
 
 int Win32Application::Run(DXSample* pSample, HINSTANCE hInstance, int nCmdShow) {
@@ -101,7 +103,19 @@ LRESULT CALLBACK Win32Application::WindowProc(HWND hWnd, uint32_t message, WPARA
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
 		}
 			return 0;
-
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+			pSample->OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+			pSample->OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		case WM_MOUSEMOVE:
+			pSample->OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
 		case WM_KEYDOWN:
 			if (pSample) {
 				pSample->OnKeyDown(static_cast<UINT8>(wParam));

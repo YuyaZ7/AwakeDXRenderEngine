@@ -21,7 +21,12 @@ DescriptorHeap::DescriptorHeap(
 		&Desc,
 		IID_PPV_ARGS(&pDH)));
 	hCPUHeapStart = pDH->GetCPUDescriptorHandleForHeapStart();
-	hGPUHeapStart = pDH->GetGPUDescriptorHandleForHeapStart();
+	if (bShaderVisible) {
+		hGPUHeapStart = pDH->GetGPUDescriptorHandleForHeapStart();
+	} else {
+		hGPUHeapStart = D3D12_GPU_DESCRIPTOR_HANDLE{.ptr = 0};
+	}
+
 	HandleIncrementSize = device->DxDevice()->GetDescriptorHandleIncrementSize(Desc.Type);
 }
 DescriptorHeap::~DescriptorHeap() {

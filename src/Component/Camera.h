@@ -29,6 +29,12 @@ public:
 	void LookAt(const Math::Vector3& pos, const Math::Vector3& target, const Math::Vector3& worldUp);
 	void UpdateViewMatrix();
 	void UpdateProjectionMatrix();
+
+	void Strafe(float d);
+	void Walk(float d);
+	void Pitch(float angle);
+	void RotateY(float angle);
+
 	Math::Matrix4 View = MathHelper::Identity4x4();
 	Math::Matrix4 Proj = MathHelper::Identity4x4();
 	Math::Vector3 Position = {0.0f, 0.0f, 0.0f};
@@ -45,5 +51,5 @@ private:
 	float mFovY = 0.0f;
 	float mNearWindowHeight = 0.0f;
 	float mFarWindowHeight = 0.0f;
-	
+	bool mViewDirty = true;
 };
