@@ -56,6 +56,11 @@ void DescriptorHeap::Reset() {
 void DescriptorHeap::CreateUAV(ID3D12Resource* resource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& pDesc, uint64 index) {
 	device->DxDevice()->CreateUnorderedAccessView(resource, nullptr, &pDesc, hCPU(index));
 }
+
 void DescriptorHeap::CreateSRV(ID3D12Resource* resource, const D3D12_SHADER_RESOURCE_VIEW_DESC& pDesc, uint64 index) {
 	device->DxDevice()->CreateShaderResourceView(resource, &pDesc, hCPU(index));
+}
+
+void DescriptorHeap::CreateDSV(ID3D12Resource* resource, const D3D12_DEPTH_STENCIL_VIEW_DESC& pDesc, uint64 index) {
+	device->DxDevice()->CreateDepthStencilView(resource, &pDesc, hCPU(index));
 }

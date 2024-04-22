@@ -166,7 +166,19 @@ Texture::Texture(
 Texture::~Texture() {
 	delete srvDesc;
 	delete uavDesc;
+	//DeleteSRV();
 }
 void Texture::DelayDispose(FrameResource* frameRes) const {
 	frameRes->AddDelayDisposeResource(resource);
+}
+void Texture::CreateSRV(DescriptorHeap* descriptorHeap, uint mipLevels) {
+	heap = descriptorHeap;
+	viewIndex = descriptorHeap->AllocateIndex();
+	GetColorSrvDesc(mipLevels);
+	descriptorHeap->CreateSRV(GetResource(), *srvDesc, viewIndex);
+}
+void Texture::DeleteSRV() {
+	if (heap != nullptr) {
+		heap->ReturnIndex(viewIndex);
+	}
 }

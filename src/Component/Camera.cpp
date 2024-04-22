@@ -2,10 +2,12 @@
 using namespace DirectX;
 using namespace Math;
 Camera::Camera() {
-	SetLens(0.25f * MathHelper::Pi, 0.1f, 100000.0f);
+	SetLens(0.33f * MathHelper::Pi, 0.1f, 3000.0f);
 }
+
 Camera::~Camera() {
 }
+
 void Camera::SetLens(float fovY, float zn, float zf) {
 	// cache properties
 	mFovY = fovY;
@@ -14,6 +16,7 @@ void Camera::SetLens(float fovY, float zn, float zf) {
 	mNearWindowHeight = 2.0f * mNearZ * tan(0.5f * mFovY);
 	mFarWindowHeight = 2.0f * mFarZ * tan(0.5f * mFovY);
 }
+
 void Camera::SetAspect(float aspect) {
 	mAspect = aspect;
 }
@@ -25,6 +28,7 @@ void Camera::LookAt(const Math::Vector3& pos, const Math::Vector3& target, const
 	Position = pos;
 	mViewDirty = true;
 }
+
 void Camera::UpdateProjectionMatrix() {
 	if (isOrtho) {
 		mFarZ = Max(mFarZ, mNearZ + 0.1f);
@@ -37,12 +41,35 @@ void Camera::UpdateProjectionMatrix() {
 		Proj = P;
 	}
 }
+
 void Camera::UpdateViewMatrix() {
 	if (mViewDirty) {
-		View = GetInverseTransformMatrix(Right, Up, Forward, Position);
-		mViewDirty = false;
+		XMVECTOR R = Right;
+		XMVECTOR U = Up;
+		XMVECTOR L = Forward;
+		XMVECTOR P = Position;
+
+		// Keep camera's axes orthogonal to each other and of unit length.
+		L = XMVector3Normalize(Forward);
+		U = XMVector3Normalize(XMVector3Cross(Forward, Right));
+
+		// U, L already ortho-normal, so no need to normalize cross product.
+		R = XMVector3Cross(U, L);
+
+		// Fill in the view matrix entries.
+		Right.SetX(XMVectorGetX(R));
+		Right.SetY(XMVectorGetY(R));
+		Right.SetZ(XMVectorGetZ(R));
+		Up.SetX(XMVectorGetX(U));
+		Up.SetY(XMVectorGetY(U));
+		Up.SetZ(XMVectorGetZ(U));
+		Forward.SetX(XMVectorGetX(L));
+		Forward.SetY(XMVectorGetY(L));
+		Forward.SetZ(XMVectorGetZ(L));
+		View = XMMatrixLookAtLH(Position, Position + Forward, Up);
 	}
 }
+
 void Camera::Strafe(float d) {
 
 	Position += Right * d;

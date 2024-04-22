@@ -25,6 +25,7 @@ FrameResource::FrameResource(Device* device)
 }
 FrameResource::~FrameResource() {
 }
+
 void FrameResource::AddDelayDisposeResource(ComPtr<ID3D12Resource> const& ptr) {
 	delayDisposeResources.push_back(ptr);
 }
@@ -134,6 +135,7 @@ void FrameResource::CopyBuffer(
 		srcOffset,
 		byteSize);
 }
+
 void FrameResource::SetRenderTarget(
 	Texture const* tex,
 	CD3DX12_CPU_DESCRIPTOR_HANDLE const* rtvHandle,
@@ -145,6 +147,7 @@ void FrameResource::SetRenderTarget(
 	cmdList->RSSetScissorRects(1, &scissorRect);
 	cmdList->OMSetRenderTargets(1, rtvHandle, FALSE, dsvHandle);
 }
+
 void FrameResource::ClearRTV(CD3DX12_CPU_DESCRIPTOR_HANDLE const& rtv) {
 	cmdList->ClearRenderTargetView(rtv, Texture::CLEAR_COLOR, 0, nullptr);
 }
@@ -158,13 +161,14 @@ void FrameResource::DrawMesh(
 	Mesh* mesh,
 	DXGI_FORMAT colorFormat,
 	DXGI_FORMAT depthFormat,
-	std::span<BindProperty> properties) {
+	std::span<BindProperty> properties,
+	uint rtv_count) {
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	cmdList->SetPipelineState(
 		psoManager->GetPipelineState(
 			mesh->Layout(),
 			shader,
-			{&colorFormat, 1},
+			{&colorFormat, rtv_count},
 			depthFormat));
 	mesh->GetVertexBufferView(vertexBufferView);
 	//Set vertex & index buffer
@@ -207,10 +211,4 @@ void FrameResource::DrawMesh(
 		0,
 		0,
 		0);
-	if (mesh->tmpIndexBuffer.GetResource() != nullptr) {
-		AddDelayDisposeResource(mesh->tmpIndexBuffer.GetResource());
-		for (auto& i : mesh->tmpVertexBuffers) {
-			AddDelayDisposeResource(i.GetResource());
-		}
-	}
 }

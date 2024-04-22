@@ -3,6 +3,8 @@
 #include <Resource/DefaultBuffer.h>
 #include <Resource/UploadBuffer.h>
 #include <Utility/ReflactableStruct.h>
+#include <DXRuntime/FrameResource.h>
+
 class Mesh : public Resource {
 	std::vector<DefaultBuffer> vertexBuffers;
 	DefaultBuffer indexBuffer;
@@ -13,16 +15,17 @@ class Mesh : public Resource {
 	uint indexCount;
 
 public:
-	UploadBuffer tmpIndexBuffer;
-	std::vector<UploadBuffer> tmpVertexBuffers;
 	std::span<DefaultBuffer const> VertexBuffers() const { return vertexBuffers; }
 	DefaultBuffer const& IndexBuffer() const { return indexBuffer; }
 	std::span<D3D12_INPUT_ELEMENT_DESC const> Layout() const { return layout; }
-	Mesh(
-		Device* device,
-		std::vector<rtti::Struct const*> vbStructs,
-		uint vertexCount,
-		uint indexCount);
+	Mesh(Device* device,
+		 std::vector<rtti::Struct const*> vbStructs,
+		 uint vertexCount,
+		 uint indexCount,
+		 FrameResource* frameRes,
+		 ID3D12GraphicsCommandList* cmdList,
+		 std::vector<std::vector<vbyte>>& vertexDatas,
+		 std::vector<uint>& indexData);
 	void GetVertexBufferView(std::vector<D3D12_VERTEX_BUFFER_VIEW>& result) const;
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 };

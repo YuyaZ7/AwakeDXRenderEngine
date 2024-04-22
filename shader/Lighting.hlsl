@@ -6,12 +6,13 @@
 #define PI 3.1415926575
 #define GAMMA 2.2
 #define INV_GAMMA 0.454545455
-struct DirLight {
 
+struct DirLight {
   float3 Strength;
-  float padding0;
+  int castShadow;
   float3 Direction;
-  float padding1;
+  float padding0;
+  float4x4 lightViewProjMatrix;
 };
 
 struct PointLight {

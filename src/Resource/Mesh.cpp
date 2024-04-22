@@ -1,24 +1,46 @@
 #include <Resource/Mesh.h>
-Mesh::Mesh(
-	Device* device,
-	std::vector<rtti::Struct const*> vbStruct,
-	uint vertexCount,
-	uint indexCount)
+
+Mesh::Mesh(Device* device,
+		   std::vector<rtti::Struct const*> vbStructs,
+		   uint vertexCount,
+		   uint indexCount,
+		   FrameResource* frameRes,
+		   ID3D12GraphicsCommandList* cmdList,
+		   std::vector<std::vector<vbyte>>& vertexDatas,
+		   std::vector<uint>& indexData)
 	: Resource(device),
-	  vertexStructs(vbStruct),
+	  vertexStructs(vbStructs),
 	  vertexCount(vertexCount),
 	  indexCount(indexCount),
-	  indexBuffer(device, sizeof(uint) * indexCount),
-	  tmpIndexBuffer(device, sizeof(uint) * indexCount) {
-	vertexBuffers.reserve(vertexStructs.size());
-	tmpVertexBuffers.reserve(vertexStructs.size());
+	  indexBuffer(device, sizeof(uint) * indexCount) {
+
+	vertexBuffers.reserve(vbStructs.size());
 	uint slotCount = 0;
-	for (uint i = 0; i < vertexStructs.size(); i++) {
-		tmpVertexBuffers.emplace_back(device, vertexStructs[i]->structSize * vertexCount);
-		vertexBuffers.emplace_back(device, vertexStructs[i]->structSize * vertexCount);
-		vertexStructs[i]->GetMeshLayout(slotCount, layout);
+	for (size_t i = 0; i < vbStructs.size(); i++) {
+		size_t bufferSize = vertexCount * vbStructs[i]->structSize;
+		vertexBuffers.emplace_back(device, bufferSize);
+		vbStructs[i]->GetMeshLayout(slotCount, layout);
 		++slotCount;
+		UploadBuffer tmpVerUB(device, bufferSize);
+		tmpVerUB.CopyData(0, {vertexDatas[i].data(), bufferSize});
+		cmdList->CopyBufferRegion(
+			vertexBuffers[i].GetResource(),
+			0,
+			tmpVerUB.GetResource(),
+			0,
+			tmpVerUB.GetByteSize());
+		frameRes->AddDelayDisposeResource(tmpVerUB.GetResource());
 	}
+	UploadBuffer tmpIndUB(device, sizeof(uint) * indexCount);
+	tmpIndUB.CopyData(0, {reinterpret_cast<vbyte const*>(indexData.data()), indexCount * sizeof(uint)});
+	// Copy index buffer to mesh
+	cmdList->CopyBufferRegion(
+		indexBuffer.GetResource(),
+		0,
+		tmpIndUB.GetResource(),
+		0,
+		tmpIndUB.GetByteSize());
+	frameRes->AddDelayDisposeResource(tmpIndUB.GetResource());
 }
 void Mesh::GetVertexBufferView(std::vector<D3D12_VERTEX_BUFFER_VIEW>& result) const {
 	result.clear();

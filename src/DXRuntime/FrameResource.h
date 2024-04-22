@@ -73,5 +73,6 @@ public:
 		Mesh* mesh,
 		DXGI_FORMAT colorFormat,
 		DXGI_FORMAT depthFormat,
-		std::span<BindProperty> properties);
+		std::span<BindProperty> properties,
+		uint rtv_count = 1);
 };

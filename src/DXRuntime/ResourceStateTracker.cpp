@@ -97,6 +97,7 @@ void ResourceStateTracker::UpdateState(ID3D12GraphicsCommandList* cmdList) {
 		states.clear();
 	}
 }
+
 void ResourceStateTracker::RestoreState(ID3D12GraphicsCommandList* cmdList) {
 	RestoreStateMap();
 	if (!states.empty()) {

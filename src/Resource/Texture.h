@@ -1,6 +1,6 @@
 #pragma once
 #include <Resource/Resource.h>
-
+#include <Resource/DescriptorHeap.h>
 enum class TextureDimension : vbyte {
 	None,
 	Tex1D,
@@ -29,6 +29,8 @@ private:
 	TextureUsage usage;
 	D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc = nullptr;
 	D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc = nullptr;
+	uint viewIndex;
+	DescriptorHeap* heap;
 
 public:
 	Texture(
@@ -55,4 +57,8 @@ public:
 	D3D12_SHADER_RESOURCE_VIEW_DESC* GetColorSrvDesc(uint mipOffset) const;
 	D3D12_UNORDERED_ACCESS_VIEW_DESC* GetColorUavDesc(uint targetMipLevel) const;
 	void DelayDispose(FrameResource* frameRes) const override;
+	void CreateSRV(DescriptorHeap*, uint);
+	void DeleteSRV();
+	DescriptorHeap* GetDescriptorHeap() { return heap; };
+	uint GetViewIndex() { return viewIndex; };
 };

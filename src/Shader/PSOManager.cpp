@@ -39,7 +39,7 @@ ID3D12PipelineState* PSOManager::GetPipelineState(
 	psoDesc.BlendState = shader->blendState;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = topologyType;
-	
+
 	size_t rtSize = std::min<size_t>(rtvFormats.size(), 8);
 	psoDesc.NumRenderTargets = rtSize;
 	for (size_t i = 0; i < rtSize; ++i) {
@@ -47,5 +47,6 @@ ID3D12PipelineState* PSOManager::GetPipelineState(
 	}
 	psoDesc.DSVFormat = depthFormat;
 	psoDesc.SampleDesc.Count = 1;
+	psoDesc.SampleDesc.Quality = 0;
 	return GetPipelineState(psoDesc);
 }
