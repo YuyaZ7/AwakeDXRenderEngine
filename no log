@@ -1,0 +1,41 @@
+[33mcommit 7a5e4a179d58e2ef38da7c57a5c245a3772574af[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Mon Apr 22 18:56:07 2024 -0400
+
+    Remove ignored files.
+
+[33mcommit 11c1a7bd425fdffecf41d6a758291ef163bd495a[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Mon Apr 22 18:48:36 2024 -0400
+
+    Remove bin/ directory from Git tracking
+
+[33mcommit 9b00c9c7b99232152bf8550fd0c856b1d071748e[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Tue Nov 7 20:08:48 2023 -0500
+
+    new git ignore
+
+[33mcommit abd66a826842b4b3914614f73fdc2e88758eeae1[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Fri May 5 07:25:23 2023 +0800
+
+    fixed the set descriptor heaps err
+
+[33mcommit d203c83fc1d3f6927987d4d3c0582a71eb00ead3[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Thu May 4 12:12:45 2023 +0800
+
+    update xmake_clangcl_lldb workflow
+
+[33mcommit 06de54a9148cadd2b464eb327f834cbfa98fd85d[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Thu Apr 20 01:59:58 2023 +0800
+
+    cmake list
+
+[33mcommit 207185905e751b1759e22d04dfa7db32d297c5ac[m
+Author: YuyaZ7 <yuyazhang7@gmail.com>
+Date:   Thu Apr 20 01:52:59 2023 +0800
+
+    Readme
